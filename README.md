@@ -47,3 +47,5 @@ There are TONS of online tutorials on how to code many simple and sophisticated 
 2. Copy/paste with care - A good rule of thumb is to avoid copy/pasting more than a line of code at time. It goes without saying that you understand the code you're copy/pasting.
 3. Get help, but do your own work - It's encouraged that you get help from other students, but others aren't allowed to work on your project.
 4. Commit regularly - At the end of your time coding, commit your code to GitHub so that your changes are recorded. 
+
+My Youtube video: https://www.youtube.com/watch?v=wOldDE9nup8
