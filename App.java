@@ -4,31 +4,35 @@ import java.util.ArrayList;
 public class App {
   public static final Scanner Input = new Scanner(System.in);
     public static void main(String[] args) {
-      MainMenu();
+      MainMenu(); // start the game by running the MainMenu function
     }
 
     public static void MainMenu() {
-      clearScreen();
+      clearScreen(); // clear the console
+      // display welcome message and options
       System.out.println("WELCOME TO TIC-TAC-TOE!\n\nEnter an option's number: (ex. 1, 2, ...)");
       System.out.println("1. Play");
 
+      // check for choice selection
       String Choice = Input.nextLine().toLowerCase();
       if (Choice.equals("1") || Choice.equals("1. play") || Choice.equals("play")) {
-        PlayGame();
+        PlayGame(); // run game function
       }
     }
 
     public static void PlayGame() {
-      ArrayList<String> PlayerNames = getPlayerInformation();
-      ArrayList<Integer> Board = new ArrayList<Integer>();
+      ArrayList<String> PlayerNames = getPlayerInformation();  // get an array of the player names
+      ArrayList<Integer> Board = new ArrayList<Integer>(); // create an array for the game board.
       for (int i = 0; i < 9; i++) {
         Board.add(0);
       }
-      boolean Playing = true;
-      boolean player = true;
+      boolean Playing = true; // debounce to keep the while loop running
+      boolean player = true; // track which players turn it is
+
+      // game loop
       while (Playing) {
         boolean correctSpot = false;
-        while (!correctSpot) {
+        while (!correctSpot) { // loop to make sure that the current player enters a valid board spot
           drawBoard(Board);
           System.out.println((player ? PlayerNames.get(0) : PlayerNames.get(1)) + " pick a spot!");
           int slot = getSlot(Input.nextLine().toLowerCase());
@@ -44,48 +48,99 @@ public class App {
           }
         }
 
+        // winner check
         int Winner = checkForWinner(Board);
         if (Winner == 1 || Winner == 2) {
           Playing = false;
+          pause(2500);
           clearScreen();
           System.out.println((PlayerNames.get(Winner - 1).toUpperCase())+ " WINS!");
-        }
-
-        if (Winner == 3) {
+        } else if (Winner == 3) {
           Playing = false;
+          pause(2500);
           clearScreen();
           System.out.println(PlayerNames.get(0).toUpperCase() + " and " + PlayerNames.get(1).toUpperCase() + " WIN... BECAUSE ITS A TIE!!!!");
         }
       }
+      pause(5000);
+      MainMenu();
     }
-    public static int getSlot(String inp) {
+    public static int getSlot(String inp) {  // finds the slot for a given input (a1, b1, c1, ...)
       
       String[] sp = inp.split("(?!^)");/*https://stackoverflow.com/questions/5235401/split-string-into-array-of-character-strings*/
       int nmbr = 0;
-      if (sp[0].equals("a")) {
+      // check the row
+      if (sp[0].equals("a")) { // row 1: values 0, 1, 2
         nmbr += 0;
-      }
-      if (sp[0].equals("b")) {
+      } else if (sp[0].equals("b")) { // row 2: values 3, 4, 5
         nmbr += 3;
-      }
-            if (sp[0].equals("c")) {
+      } else { // row 3: values 6, 7, 8
         nmbr += 6;
       }
-      nmbr += Integer.parseInt(sp[1]) - 1;
+      nmbr += Integer.parseInt(sp[1]) - 1;  // add the column value
       return nmbr;
     }
-    public static int checkForWinner(ArrayList<Integer> brd) {
-      
+    public static int checkForWinner(ArrayList<Integer> brd) { 
+      // winner check
+      // loops through the current board to see if someone has won
+
+      // getting the value for each slot
+      int Slot1 = brd.get(0); // get is a method of ArrayList
+      int Slot2 = brd.get(1);
+      int Slot3 = brd.get(2);
+      int Slot4 = brd.get(3);
+      int Slot5 = brd.get(4);
+      int Slot6 = brd.get(5);
+      int Slot7 = brd.get(6);
+      int Slot8 = brd.get(7);
+      int Slot9 = brd.get(8);
+
+      // row check
+      if (Slot1 == Slot2 && Slot1 == Slot3) {
+        return Slot1;  // return the player who won
+      }
+      if (Slot4 == Slot5 && Slot4 == Slot6) {
+        return Slot4; // return the player who won
+      }
+      if (Slot7 == Slot8 && Slot7 == Slot9) {
+        return Slot7;  // return the player who won
+      }
+      // column check
+      if (Slot1 == Slot4 && Slot1 == Slot7) {
+        return Slot1; // return the player who won
+      }
+      if (Slot2 == Slot5 && Slot2 == Slot8) {
+        return Slot2; // return the player who won
+      }
+      if (Slot3 == Slot6 && Slot3 == Slot9) {
+        return Slot3; // return the player who won
+      }
+
+      // cross check
+      if (Slot1 == Slot5 && Slot1 == Slot9) {
+        return Slot1; // return the player who won
+      }
+      if (Slot3 == Slot5 && Slot3 == Slot7) {
+        return Slot3; // return the player who won
+      }
+
+      // check for tie
       for (int i = 0; i < brd.size(); i++) {
         if (brd.get(i) == 0) {
-          return 0;
+          return 0;  // game isnt over yet
         }
       }
-      return 3;
+      return 3;  // tie
     }
 
     public static void drawBoard(ArrayList<Integer> brd){
+
+      /*
+        Draws the board to the console
+      */
+
       clearScreen();
+
       /*
        | | | |
        | | | |
@@ -97,13 +152,9 @@ public class App {
         int z = brd.get(i);
         if (z == 1) {
           put = "x";
-        }
-
-        if (z == 2) {
+        } else if (z == 2) {
           put = "o";
-        }
-
-        if (z == 0) {
+        } else if (z == 0) {
           if (i == 0  || i == 1 || i == 2) {
             put = "a" + (i+1);
           }
@@ -122,10 +173,11 @@ public class App {
         }
         //System.out.println(i + " " + brd.get(i));
       }
-      System.out.println(p);
+      System.out.println(p);  // display the board
     }
 
     public static ArrayList<String> getPlayerInformation() {
+      // request names from the players
       clearScreen();
       ArrayList<String> Names = new ArrayList<String>();
       for (int i = 1; i < 3; i++) {
@@ -137,10 +189,22 @@ public class App {
     }
 
     /*
+      clearScreen();
       https://stackoverflow.com/questions/2979383/java-clear-the-console
     */
     public static void clearScreen() {  
         System.out.print("\033[H\033[2J");  
         System.out.flush();  
     }  
+    /*
+      pause();
+      https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+    */
+    public static void pause(int ms) {
+      try {
+          Thread.sleep(ms);
+      } catch (InterruptedException e) {
+          System.err.format("IOException: %s%n", e);
+      }
+    }
 }
