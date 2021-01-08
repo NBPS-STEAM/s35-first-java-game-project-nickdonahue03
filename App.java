@@ -15,8 +15,10 @@ public class App {
 
       // check for choice selection
       String Choice = Input.nextLine().toLowerCase();
-      if (Choice.equals("1") || Choice.equals("1. play") || Choice.equals("play")) {
+      if (Choice.equals("1")) {
         PlayGame(); // run game function
+      } else {
+        MainMenu();
       }
     }
 
@@ -36,7 +38,7 @@ public class App {
           drawBoard(Board);
           System.out.println((player ? PlayerNames.get(0) : PlayerNames.get(1)) + " pick a spot!");
           int slot = getSlot(Input.nextLine().toLowerCase());
-          if (Board.get(slot) == 0) {
+          if (slot != 99 && Board.get(slot) == 0) {
             if (player) {
               Board.set(slot, 1);
               player = false;
@@ -68,16 +70,30 @@ public class App {
     public static int getSlot(String inp) {  // finds the slot for a given input (a1, b1, c1, ...)
       
       String[] sp = inp.split("(?!^)");/*https://stackoverflow.com/questions/5235401/split-string-into-array-of-character-strings*/
+
+      if (sp.length != 2) {
+        return 99;
+      }
+
       int nmbr = 0;
       // check the row
       if (sp[0].equals("a")) { // row 1: values 0, 1, 2
         nmbr += 0;
       } else if (sp[0].equals("b")) { // row 2: values 3, 4, 5
         nmbr += 3;
-      } else { // row 3: values 6, 7, 8
+      } else if (sp[0].equals("c")) { // row 3: values 6, 7, 8
         nmbr += 6;
+      } else {
+        return 99;
       }
-      nmbr += Integer.parseInt(sp[1]) - 1;  // add the column value
+      
+      int parsed = Integer.parseInt(sp[1]);
+
+      if (parsed > 3 || parsed == 0) {
+        return 99;
+      }
+
+      nmbr += parsed - 1;  // add the column value
       return nmbr;
     }
     public static int checkForWinner(ArrayList<Integer> brd) { 
@@ -146,15 +162,16 @@ public class App {
        | | | |
        | | | |
       */
-      String p = "";
-      for (int i = 0; i < brd.size(); i++) {
-        String put = "";
-        int z = brd.get(i);
-        if (z == 1) {
+      String p = "";  // what to print out
+      for (int i = 0; i < brd.size(); i++) {  // looping through the board
+        String put = "";  // what will appear in the console
+        int z = brd.get(i);  // value of the current square
+        if (z == 1) {  // value is 1 which means it is an x square
           put = "x";
-        } else if (z == 2) {
+        } else if (z == 2) {  // value is 2 which means it is an o square
           put = "o";
-        } else if (z == 0) {
+        } else if (z == 0) {  // value is 0 which means it hasn't been claimed yet.
+          // finding the row and column
           if (i == 0  || i == 1 || i == 2) {
             put = "a" + (i+1);
           }
@@ -166,9 +183,10 @@ public class App {
           }
         }
 
+        // formatting
         p += "| " + put + " ";
         if (i == 2 || i == 5 || i == 8) {
-          p += "|\n";
+          p += "|\n"; // closing off rows.
   
         }
         //System.out.println(i + " " + brd.get(i));
